@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import ContestCard from "./components/contestCard"
 import FilterBar from "./components/FilterBar"
 import StatsFooter from "./components/StatsFooter"
+import Dashboard from "./components/Dashboard"
 
 function App() {
   const [contests, setcontests] = useState([])
@@ -52,6 +53,8 @@ function App() {
       <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-6`}>
         {contests.length} upcoming contests
       </p>
+
+      <Dashboard />
 
       <input 
         type="text"
