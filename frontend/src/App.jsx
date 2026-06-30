@@ -13,7 +13,7 @@ function App() {
   const [search, setSearch] = useState('')
   
   useEffect(() => {
-    fetch('http://localhost:3000/api/contests')
+    fetch('https://codepulse-backend-971g.onrender.com/api/contests')
       .then(r => r.json())
       .then(d => {
         setcontests(d.data)

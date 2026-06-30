@@ -4,7 +4,7 @@ function StatsFooter() {
     const [stats, setStats] = useState(null)
 
     useEffect(() => {
-        fetch('http://localhost:3000/api/stats')
+        fetch('https://codepulse-backend-971g.onrender.com/api/stats')
             .then(r => r.json())
             .then(d => setStats(d))
             .catch(() => {})
