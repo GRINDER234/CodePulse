@@ -6,7 +6,7 @@ import {LineChart, Line , XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 
 
 
-function Dashboard() {
+function Dashboard({onHandleLoad}) {
     const [handle, setHandle] = useState('')
     const [userInfo, setUserInfo] = useState(null)
     const [ratingHistory, setRatingHistory] = useState([])
@@ -26,6 +26,7 @@ function Dashboard() {
                     const saved = docSnap.data().cfHandle
                     setSavedHandle(saved)
                     setHandle(saved)
+                    if(onHandleLoad) onHandleLoad(saved)
                     fetchUserData(saved)
                 }
             } catch (err) {
@@ -46,6 +47,7 @@ function Dashboard() {
                 updatedAt: new Date().toISOString()
             }, {merge: true})
             setSavedHandle(handle.trim())
+            if(onHandleLoad) onHandleLoad(handle.trim())
             alert('Handle saved!')
         }catch (err) {
             console.error('Error saving handle:', err)

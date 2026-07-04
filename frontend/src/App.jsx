@@ -17,6 +17,7 @@ function App() {
   const [search, setSearch] = useState('')
   const [user, setUser] = useState(null)
   const [authLoading, setAuthLoading] = useState(true)
+  const [cfHandle, setcfHandle] = useState('')
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (u) => {
@@ -60,7 +61,7 @@ return (
       <div className="flex items-center justify-between mb-2">
         <h1 className="text-3xl font-bold">CodePulse</h1>
         <div className="flex items-center gap-3">
-          <span className="text-gray-400 text-sm">{user.email}</span>
+          <span className="text-gray-400 text-sm">{cfHandle ? `Hey, ${cfHandle}!` : `Hey!`}</span>
           <button
             onClick={() => signOut(auth)}
             className="px-3 py-1.5 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors"
@@ -80,7 +81,7 @@ return (
         {contests.length} upcoming contests
       </p>
 
-      <Dashboard />
+      <Dashboard onHandleLoad={setcfHandle} />
 
       <input
         type="text"
