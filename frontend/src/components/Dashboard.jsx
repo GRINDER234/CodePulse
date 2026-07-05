@@ -14,6 +14,9 @@ function Dashboard({onHandleLoad}) {
     const [error, setError] = useState(null)
     const [saving, setSaving] = useState(false)
     const [savedHandle, setSavedHandle] = useState('')
+    const [lcHandle, setlcHandle] = useState('')
+    const [lcStats, setlcStats] = useState('')
+    const [lcloading, setlcloading] = useState(false)
 
     useEffect(() => {
         const loadHandle = async () => {
@@ -90,6 +93,24 @@ function Dashboard({onHandleLoad}) {
         setLoading(false)
     }
 
+    const fetchLCStats = async() => {
+        if(!lcHandle.trim()) return
+        setlcloading(true)
+        try{
+            const res = await fetch(`https://alfa-leetcode-api.onrender.com/userProfile/${lcHandle}`)
+            const data = await res.json()
+            if(data.totalSolved != undefined){
+                setlcStats(data)
+            }else{
+                setlcStats(null)
+            }
+        }catch(err){
+            console.error('LC fetch failed:', err)
+        } 
+
+        setlcloading(false)
+    }
+
     const getRankColor = (rank) => {
         if(!rank) return 'text-gray-400'
         if(rank.includes('legendary')) return 'text-red-400'
@@ -158,6 +179,47 @@ return (
                     </div>
                 </div>
             )}
+
+            <div className="mt-2 mb-6">
+                <h3 className="text-lg font-semibold mb-3">LeetCode Stats</h3>
+                <div className="flex flex-wrap gap-3 mb-4">
+                    <input
+                        type="text"
+                        placeholder="Enter LeetCode username..."
+                        value={lcHandle}
+                        onChange={e => setlcHandle(e.target.value)}
+                        onKeyDown={e => e.key === 'Enter' && fetchLCStats()}
+                        className="px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-500 border border-gray-700 focus:outline-none focus:border-yellow-500 w-64"
+                    />
+                    <button
+                        onClick={fetchLCStats}
+                        className="px-5 py-2 bg-yellow-600 hover:bg-yellow-500 text-white rounded-lg text-sm font-medium transition-colors"
+                    >
+                        {lcloading ? 'Loading...' : 'Fetch LC Stats'}
+                    </button>
+                </div>
+
+                {lcStats && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-gray-800 border border-gray-700 rounded-xl p-4 text-center">
+                            <p className="text-gray-400 text-xs mb-1">Total Solved</p>
+                            <p className="text-white font-bold text-lg">{lcStats.totalSolved}</p>
+                        </div>
+                        <div className="bg-gray-800 border border-green-800 rounded-xl p-4 text-center">
+                            <p className="text-gray-400 text-xs mb-1">Easy</p>
+                            <p className="text-green-400 font-bold text-lg">{lcStats.easySolved}</p>
+                        </div>
+                        <div className="bg-gray-800 border border-yellow-800 rounded-xl p-4 text-center">
+                            <p className="text-gray-400 text-xs mb-1">Medium</p>
+                            <p className="text-yellow-400 font-bold text-lg">{lcStats.mediumSolved}</p>
+                        </div>
+                        <div className="bg-gray-800 border border-red-800 rounded-xl p-4 text-center">
+                            <p className="text-gray-400 text-xs mb-1">Hard</p>
+                            <p className="text-red-400 font-bold text-lg">{lcStats.hardSolved}</p>
+                        </div>
+                    </div>
+                )}
+            </div>
 
             {ratingHistory.length > 0 && (
                 <div className="bg-gray-800 border border-gray-700 rounded-xl p-5">
